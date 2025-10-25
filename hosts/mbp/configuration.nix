@@ -20,6 +20,14 @@
 
   programs.zsh.enable = true;
 
+  # SSH configuration for linux-builder
+  programs.ssh.extraConfig = ''
+    Host linux-builder
+      Hostname localhost
+      HostKeyAlias linux-builder
+      Port 31022
+  '';
+
   system.stateVersion = 5;
 
   nixpkgs.hostPlatform = "aarch64-darwin";

@@ -21,3 +21,9 @@ nix run nix-darwin -- switch --flake .
 ```sh
 sudo darwin-rebuild switch --flake .#mbp
 ```
+
+### Linux Builder
+
+```sh
+nix run nixpkgs#darwin.linux-builder
+```

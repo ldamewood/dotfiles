@@ -20,7 +20,11 @@
       home-manager,
       ...
     }:
-
+    let
+      system = "aarch64-darwin";
+      pkgs = nixpkgs.legacyPackages."${system}";
+      linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
+    in
     {
       # Build darwin flake using:
       # $ darwin-rebuild switch --flake .#mbp
@@ -35,6 +39,27 @@
                 ./home/home.nix
               ];
             };
+          }
+          {
+            nix.distributedBuilds = true;
+            nix.buildMachines = [{
+              hostName = "linux-builder";
+              sshUser = "builder";
+              sshKey = "/etc/nix/builder_ed25519";
+              system = linuxSystem;
+              maxJobs = 4;
+              supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
+            }];
+            # launchd.daemons.linux-builder = {
+            #   command = "${pkgs.darwin.linux-builder}/bin/create-builder";
+            #   serviceConfig = {
+            #     KeepAlive = true;
+            #     RunAtLoad = true;
+            #     StandardOutPath = "/var/log/darwin-builder.log";
+            #     StandardErrorPath = "/var/log/darwin-builder.log";
+            #     WorkingDirectory = "/var/lib/darwin-builder";
+            #   };
+            # };
           }
         ];
       };
