@@ -1,0 +1,6 @@
+**/result
+*.qcow2
+*.zst
+
+/keys/
+.DS_Store

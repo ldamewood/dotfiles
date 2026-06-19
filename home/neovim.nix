@@ -13,10 +13,13 @@
         config = ''
           local capabilities = require('cmp_nvim_lsp').default_capabilities()
           require'lspconfig'.html.setup { capabilities = capabilities }
-          require'lspconfig'.elixirls.setup { 
+          require'lspconfig'.elixirls.setup {
             cmd = {"${pkgs.elixir-ls}/bin/elixir-ls"};
-            capabilities = capabilities 
+            capabilities = capabilities
           }
+          require'lspconfig'.nil_ls.setup { capabilities = capabilities }
+          require'lspconfig'.pyright.setup { capabilities = capabilities }
+          require'lspconfig'.lua_ls.setup { capabilities = capabilities }
         '';
       }
       cmp-nvim-lsp
@@ -47,10 +50,10 @@
       ansible-vim
       vim-nix
       {
-        plugin = nord-nvim;
+        plugin = tokyonight-nvim;
         type = "lua";
         config = ''
-          vim.cmd[[colorscheme nord]]
+          vim.cmd[[colorscheme tokyonight]]
         '';
       }
       {
@@ -74,6 +77,7 @@
               graphql = { "prettier" },
               lua = { "stylua" },
               python = { "isort", "black" },
+              nix = { "nixfmt" },
             },
             format_on_save = {
               lsp_fallback = true,

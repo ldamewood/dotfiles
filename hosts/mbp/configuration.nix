@@ -1,6 +1,11 @@
 { pkgs, lib, ... }:
 
 {
+  # Allow 1Password CLI and browser extension (NUR addon name can include version)
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "1password-cli" "1password-x-password-manager" ]
+    || lib.hasPrefix "onepassword-password-manager" (lib.getName pkg);
+
   environment.systemPackages = [
     pkgs.vim
   ];
@@ -48,10 +53,10 @@
       autohide = true;
       mru-spaces = false;
       persistent-apps = [
-        "/System/Applications/Launchpad.app"
+        "/System/Applications/Apps.app"
         "${pkgs.alacritty}/Applications/Alacritty.app"
         "/System/Applications/Utilities/Activity Monitor.app"
-        "/Applications/LibreWolf.app"
+        "${pkgs.librewolf}/Applications/LibreWolf.app"
         "/System/Applications/System Settings.app"
         "/Applications/Visual Studio Code.app"
       ];
@@ -71,7 +76,7 @@
       "google-chrome"
       "docker-desktop"
       "wezterm"
-      "cursor"
+      "plex"
       "parallels"
       "minecraft"
       "steam"
@@ -79,12 +84,6 @@
       "nordvpn"
       "vlc"
       "cryptomator"
-      {
-        name = "librewolf";
-        args = {
-          no_quarantine = true;
-        };
-      }
     ];
   };
 }

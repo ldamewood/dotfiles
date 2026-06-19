@@ -42,7 +42,7 @@
       };
       cursor.style = "Block";
 
-      # nord theme
+      # tokyo night theme
       colors = {
         primary = {
           background = "0x1a1b26";
