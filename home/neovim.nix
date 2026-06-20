@@ -12,14 +12,15 @@
         type = "lua";
         config = ''
           local capabilities = require('cmp_nvim_lsp').default_capabilities()
-          require'lspconfig'.html.setup { capabilities = capabilities }
-          require'lspconfig'.elixirls.setup {
-            cmd = {"${pkgs.elixir-ls}/bin/elixir-ls"};
-            capabilities = capabilities
-          }
-          require'lspconfig'.nil_ls.setup { capabilities = capabilities }
-          require'lspconfig'.pyright.setup { capabilities = capabilities }
-          require'lspconfig'.lua_ls.setup { capabilities = capabilities }
+          vim.lsp.config('html', { capabilities = capabilities })
+          vim.lsp.config('elixirls', {
+            cmd = {"${pkgs.elixir-ls}/bin/elixir-ls"},
+            capabilities = capabilities,
+          })
+          vim.lsp.config('nil_ls', { capabilities = capabilities })
+          vim.lsp.config('pyright', { capabilities = capabilities })
+          vim.lsp.config('lua_ls', { capabilities = capabilities })
+          vim.lsp.enable({'html', 'elixirls', 'nil_ls', 'pyright', 'lua_ls'})
         '';
       }
       cmp-nvim-lsp
@@ -32,19 +33,7 @@
       fidget-nvim
       telescope-nvim
       nvim-web-devicons
-      {
-        plugin = nvim-treesitter.withAllGrammars;
-        type = "lua";
-        config = ''
-          require("nvim-treesitter.configs").setup({
-            auto_install = false,
-            highlight = {
-              enable = true,
-              disable = { }
-            },
-          })
-        '';
-      }
+      nvim-treesitter.withAllGrammars
       telescope-zoxide
       vim-tmux-navigator
       ansible-vim

@@ -31,6 +31,7 @@
       Hostname localhost
       HostKeyAlias linux-builder
       Port 31022
+      IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
   '';
 
   system.stateVersion = 5;

@@ -1,9 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  # Configure the linux-builder with custom resources
-  # This automatically manages the VM and sets up aarch64-linux building
-  # Temporarily disabled to fix bootstrapping issues - set to true after fixing config
+  # Manages the linux-builder VM for aarch64-linux builds
   nix.linux-builder = {
     enable = true;
     maxJobs = 16;
