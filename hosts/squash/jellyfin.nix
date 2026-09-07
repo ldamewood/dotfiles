@@ -1,6 +1,6 @@
 # Jellyfin media server, running as a launchd system daemon.
 #
-# Data/config live under ~/Library/Application Support/Jellyfin.
+# Data/config live under ~/.local/share/jellyfin; logs under ~/.local/log/jellyfin.
 # The server listens on port 8096 (HTTP) and 8920 (HTTPS) by default.
 # Runs as the squash user (nix-darwin does not provision arbitrary system users).
 #
@@ -13,15 +13,15 @@
 # Useful commands:
 #   sudo launchctl list | grep jellyfin                        # check status
 #   sudo launchctl kickstart -k system/org.jellyfin.server     # restart
-#   tail -f ~/Library/Logs/Jellyfin/jellyfin.log
+#   tail -f ~/.local/log/jellyfin/jellyfin.log
 { pkgs, config, ... }:
 let
   user      = config.hostSettings.username;
   home      = "/Users/${user}";
-  dataDir   = "${home}/Library/Application Support/Jellyfin/Data";
-  configDir = "${home}/Library/Application Support/Jellyfin/Config";
-  cacheDir  = "${home}/Library/Caches/Jellyfin";
-  logDir    = "${home}/Library/Logs/Jellyfin";
+  dataDir   = "${home}/.local/share/jellyfin";
+  configDir = "${home}/.config/jellyfin";
+  cacheDir  = "${home}/.cache/jellyfin";
+  logDir    = "${home}/.local/log/jellyfin";
 
   # Wrapper that creates required directories then execs Jellyfin.
   # Keeps the launchd plist simple and avoids ordering issues with
