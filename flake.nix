@@ -91,6 +91,7 @@
           ./hosts/common.nix
           ./hosts/linux-builder.nix
           ./hosts/squash/configuration.nix
+          ./hosts/squash/jellyfin.nix
           inputs.home-manager.darwinModules.home-manager
           {
             home-manager.backupFileExtension = "backup";
