@@ -42,8 +42,6 @@ in
       UserName = user;
       RunAtLoad = true;
       KeepAlive = true;
-      StandardOutPath   = "${logDir}/jellyfin.log";
-      StandardErrorPath = "${logDir}/jellyfin-error.log";
       SoftResourceLimits.NumberOfFiles = 65536;
     };
   };
