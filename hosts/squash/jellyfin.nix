@@ -69,7 +69,4 @@ in
     };
   };
 
-  # Open the HTTP port in the macOS firewall (if pf/alf is active)
-  # and make the port visible in the host's service inventory.
-  networking.firewall.allowedTCPPorts = [ 8096 8920 ];
 }
