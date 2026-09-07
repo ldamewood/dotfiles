@@ -1,5 +1,5 @@
 {
-  description = "Example nix-darwin system flake";
+  description = "liam's nix-darwin system flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -31,7 +31,7 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfreePredicate = pkg:
-          builtins.elem (lib.getName pkg) [ "1password-cli" "1password-x-password-manager" ]
+          builtins.elem (lib.getName pkg) [ "1password-cli" "1password-x-password-manager" "claude-code" ]
           || lib.hasPrefix "onepassword-password-manager" (lib.getName pkg);
       };
       linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
@@ -66,16 +66,36 @@
       darwinConfigurations."mbp" = nix-darwin.lib.darwinSystem {
         specialArgs = { inherit inputs; };
         modules = [
+          ./hosts/common.nix
+          ./hosts/linux-builder.nix
           ./hosts/mbp/configuration.nix
-          ./hosts/mbp/linux-builder.nix
           inputs.home-manager.darwinModules.home-manager
           {
+            home-manager.backupFileExtension = "backup";
             home-manager.extraSpecialArgs = { inherit firefox-addons-pkgs; };
             home-manager.users.liam = {
               imports = [
                 inputs._1password-shell-plugins.hmModules.default
-                ./home/home.nix
+                ./home/mbp.nix
               ];
+            };
+          }
+        ];
+      };
+
+      # Headless remote build host. Build using:
+      # $ darwin-rebuild switch --flake .#squash
+      darwinConfigurations."squash" = nix-darwin.lib.darwinSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/common.nix
+          ./hosts/linux-builder.nix
+          ./hosts/squash/configuration.nix
+          inputs.home-manager.darwinModules.home-manager
+          {
+            home-manager.backupFileExtension = "backup";
+            home-manager.users.squash = {
+              imports = [ ./home/squash.nix ];
             };
           }
         ];

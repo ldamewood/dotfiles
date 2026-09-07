@@ -1,44 +1,9 @@
-{ pkgs, lib, ... }:
-
+# mbp is the primary interactive workstation: full GUI apps, Homebrew casks,
+# Dock/Finder tweaks. Shared settings come from ../common.nix and
+# ../linux-builder.nix (see flake.nix).
+{ pkgs, ... }:
 {
-  # Allow 1Password CLI and browser extension (NUR addon name can include version)
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "1password-cli" "1password-x-password-manager" ]
-    || lib.hasPrefix "onepassword-password-manager" (lib.getName pkg);
-
-  environment.systemPackages = [
-    pkgs.vim
-  ];
-
-  users.users.liam = {
-    home = "/Users/liam";
-  };
-
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    trusted-users = [ "root" "liam" ];
-    system-features = [
-      "nixos-test"
-      "apple-virt"
-    ];
-  };
-
-  programs.zsh.enable = true;
-
-  # SSH configuration for linux-builder
-  programs.ssh.extraConfig = ''
-    Host linux-builder
-      Hostname localhost
-      HostKeyAlias linux-builder
-      Port 31022
-      IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-  '';
-
-  system.stateVersion = 5;
-
-  nixpkgs.hostPlatform = "aarch64-darwin";
-
-  system.primaryUser = "liam";
+  hostSettings.linuxBuilderIdentityAgent = "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
 
   # Enable Touch ID support for sudo
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -63,7 +28,7 @@
       ];
     };
   };
-    
+
   homebrew = {
     enable = true;
     onActivation = {
@@ -74,17 +39,16 @@
       "1password"
       "1password-cli"
       "github"
-      "google-chrome"
       "docker-desktop"
       "wezterm"
       "plex"
-      "parallels"
       "minecraft"
       "steam"
       "visual-studio-code"
       "nordvpn"
       "vlc"
       "cryptomator"
+      "wifiman"
     ];
   };
 }
