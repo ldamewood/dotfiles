@@ -21,35 +21,29 @@ let
   logDir    = "/var/log/jellyfin";
   configDir = "/var/lib/jellyfin/config";
   user      = config.hostSettings.username;
+
+  # Wrapper that creates required directories then execs Jellyfin.
+  # Keeps the launchd plist simple and avoids ordering issues with
+  # activationScripts.
+  startScript = pkgs.writeShellScript "jellyfin-start" ''
+    mkdir -p ${dataDir} ${configDir} ${cacheDir} ${logDir}
+    exec ${pkgs.jellyfin}/bin/jellyfin \
+      --datadir   ${dataDir}   \
+      --configdir ${configDir} \
+      --cachedir  ${cacheDir}  \
+      --logdir    ${logDir}
+  '';
 in
 {
-  # Create required directories before the daemon starts
-  system.activationScripts.jellyfinDirs = {
-    text = ''
-      for d in ${dataDir} ${cacheDir} ${logDir} ${configDir}; do
-        mkdir -p "$d"
-        chown ${user} "$d"
-        chmod 750 "$d"
-      done
-    '';
-    deps = [ "users" ];
-  };
-
   launchd.daemons.jellyfin = {
     serviceConfig = {
       Label = "org.jellyfin.server";
-      ProgramArguments = [
-        "${pkgs.jellyfin}/bin/jellyfin"
-        "--datadir"    dataDir
-        "--configdir"  configDir
-        "--cachedir"   cacheDir
-        "--logdir"     logDir
-      ];
+      ProgramArguments = [ "${startScript}" ];
       UserName = user;
       RunAtLoad = true;
       KeepAlive = true;
-      StandardOutPath    = "${logDir}/jellyfin.log";
-      StandardErrorPath  = "${logDir}/jellyfin-error.log";
+      StandardOutPath   = "${logDir}/jellyfin.log";
+      StandardErrorPath = "${logDir}/jellyfin-error.log";
       SoftResourceLimits.NumberOfFiles = 65536;
     };
   };
